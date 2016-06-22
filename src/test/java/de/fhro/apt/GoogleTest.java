@@ -32,7 +32,7 @@ public class GoogleTest {
     @BeforeTest
     public void setup() {
         ChromeDriverManager.getInstance().setup();
-        //Start the browser (firefox for now)
+        //Start the browser (chrome for now)
         this.driver = new ChromeDriver();
         this.driver.manage().window().maximize();
         this.waitHelper = new WaitHelper(this.driver);
