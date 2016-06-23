@@ -1,18 +1,16 @@
 package de.fhro.apt;
 
 import de.fhro.apt.helper.WaitHelper;
+import de.fhro.apt.lib.DriverFactory;
 import de.fhro.apt.page.GoogleResultPage;
 import de.fhro.apt.page.GoogleStartPage;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -31,16 +29,12 @@ public class GoogleTest {
 
     @BeforeTest
     public void setup() {
-        ChromeDriverManager.getInstance().setup();
         //Start the browser (chrome for now)
-        this.driver = new ChromeDriver();
-        this.driver.manage().window().maximize();
+        driver = DriverFactory.startDriverByBrowser(DriverFactory.CHROME);
+
         this.waitHelper = new WaitHelper(this.driver);
         this.googleStartPage = new GoogleStartPage(this.driver);
         this.googleResultPage = new GoogleResultPage(this.driver);
-
-        //This adds implicit timeouts to the driver (instead of clickAndWait())
-        this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     @BeforeMethod
@@ -81,8 +75,8 @@ public class GoogleTest {
     }
 
     @AfterTest
-    public void closeSelenium() {
+    public void tearDown() {
         //Shutdown the browser
-        driver.quit();
+        DriverFactory.closeWebdriver();
     }
 }
